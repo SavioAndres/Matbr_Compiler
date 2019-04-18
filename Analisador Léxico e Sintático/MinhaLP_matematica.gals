@@ -1,0 +1,152 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = LL
+#RegularDefinitions
+DIGIT: [0-9]
+LETRA: [A-Za-z]
+COMENT: "#" [^ "#" ]* "#"
+ESP: [\ \t\n\r]
+#Tokens
+","
+"+"
+"-"
+"*"
+"/"
+"="
+"=="
+"/="
+">"
+"<"
+"<="
+">="
+"("
+")"
+"["
+"]"
+"{"
+"}"
+numero: ({DIGIT}+) | ({DIGIT}+ "." {DIGIT}+) | ("-" {DIGIT}+) | ("-" {DIGIT}+ "." {DIGIT}+)
+variavel: ({LETRA} | "_") ({LETRA} | {DIGIT} | "_")*
+texto: \"{LETRA}+\" | '{LETRA}+'
+matbr = variavel : "matbr"
+leia = variavel : "leia"
+escreva = variavel : "escreva"
+se = variavel : "se"
+senao = variavel : "senao"
+enquanto = variavel : "enquanto"
+escolha = variavel : "escolha"
+caso = variavel : "caso"
+para = variavel : "para"
+ir = variavel : "ir"
+de = variavel : "de"
+ate = variavel : "ate"
+faca = variavel : "faca"
+pi = variavel : "pi"
+euler = variavel : "euler"
+:! {COMENT}
+: {ESP}*
+#NonTerminals
+<program>
+<tipo>
+<statement>
+<statementx>
+<variavel>
+<variavelx>
+<escreva>
+<funcao>
+<parametro>
+<parametrox>
+<parametroxx>
+<se>
+<senao>
+<para>
+<enquanto>
+<escolha>
+<caso>
+<teste>
+<varnum>
+<calculo>
+<calculox>
+<soma>
+<somax>
+<subtracao>
+<subtracaox>
+<multiplica>
+<multiplicax>
+<divisao>
+<divisaox>
+#Grammar
+<program> ::= <statement>;
+
+<statement> ::= matbr "{" <statementx> "}";
+<statement> ::= <variavel>;
+<statement> ::= <calculo>;
+<statement> ::= <se>;
+<statement> ::= <para>;
+<statement> ::= <enquanto>;
+<statement> ::= <escolha>;
+
+<statementx> ::= <statement> <statementx>;
+<statementx> ::= î;
+
+<variavel> ::= variavel <variavelx>;
+<variavelx> ::= "=" <tipo> | <funcao> | î;
+
+<tipo> ::= numero | variavel | texto | leia;
+
+<escreva> ::= escreva "(" <tipo> ")";
+
+<funcao> ::= "(" <parametro> ")" "{" <statement> "}";
+
+<parametro> ::= variavel <parametrox>;
+<parametro> ::= numero <parametrox>;
+<parametro> ::= "(" <calculo> ")" <parametrox>;
+<parametrox> ::= "," <parametroxx>;
+<parametroxx> ::= variavel <parametrox>;
+<parametroxx> ::= numero <parametrox>;
+<parametroxx> ::= "(" <calculo> ")" <parametrox>;
+<parametrox> ::= î;
+
+<se> ::= se <teste> faca "{" <statement> "}" <senao>;
+<senao> ::= senao "{" <statement> "}";
+<senao> ::= î;
+
+<para> ::= para ir de numero ate numero faca "{" <statement> "}";
+
+<enquanto> ::= enquanto <teste> faca "{" <statement> "}";
+
+<escolha> ::= escolha <teste> "{" <caso> "}";
+<caso> ::= caso <varnum> faca "{" <statement> "}" <caso>;
+<caso> ::= î;
+
+<teste> ::= "(" <teste> ")";
+<teste> ::= <varnum>;
+
+<varnum> ::= variavel | numero;
+
+
+<calculo> ::= <soma>;
+
+<soma> ::= numero <somax>;
+<somax> ::= "+" <soma>;
+<somax> ::= î;
+
+<subtracao> ::= numero <subtracaox>;
+<subtracaox> ::= "-" <subtracao>;
+<subtracaox> ::= î;
+
+<multiplica> ::= numero <multiplicax>;
+<multiplicax> ::= "*" <multiplica>;
+<multiplicax> ::= î;
+
+<divisao> ::= numero <divisaox>;
+<divisaox> ::= "/" <divisao>;
+<divisaox> ::= î;
